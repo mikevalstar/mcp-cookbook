@@ -34,7 +34,10 @@ export async function recipeList(folder: string, search?: string) {
       distance: 1000,
       threshold: 0.5,
     });
-    return fuse.search(search).map((result) => result.item);
+    return fuse
+      .search(search)
+      .map((result) => result.item)
+      .slice(0, 50);
   }
 
   return returnData;
