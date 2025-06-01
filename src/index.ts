@@ -3,8 +3,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
-import { recipeList } from "./lib/recipieList.js";
-import { recipeRead } from "./lib/recipieRead.js";
+import { recipeList } from "./lib/recipeList.js";
+import { recipeRead } from "./lib/recipeRead.js";
 
 // Create an MCP server
 const server = new McpServer(
@@ -15,7 +15,7 @@ const server = new McpServer(
       "A MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks",
   },
   {
-    instructions: `This server provides a list of reusable tasks and procedures also known as cookbooks or recipes for use in determining next steps on a task and prescriptive instructions.
+    instructions: `This provides a list of reusable tasks and procedures also known as cookbooks or recipes for use in determining next steps on a task and prescriptive instructions.
 
       The recipe, cookbook, or procedure is a list of steps to complete a task.
       The recipe, cookbook, or procedure is written in markdown format.
@@ -23,10 +23,21 @@ const server = new McpServer(
 
       When you know the name of the recipe, cookbook, or procedure you want to use, you can use the read_cookbook tool to read the recipe, cookbook, or procedure.
 
-      You shoudl follow these cookbooks when there is one available, it will help you complete the task.
+      You should follow these cookbooks when there is one available, it will help you complete the task.
       `,
   }
 );
+
+// list all the cookbooks
+server.tool("list_cookbooks", "List all the cookbooks", {}, async () => {
+  const recipes = await recipeList(process.env.COOKBOOK_ROOT || "");
+  return {
+    content: recipes.map((recipe) => ({
+      type: "text",
+      text: `${recipe.short}: ${recipe.name} - ${recipe.description}`,
+    })),
+  };
+});
 
 // Search to cookbook for files
 server.tool(
@@ -40,10 +51,10 @@ server.tool(
       ),
   },
   async ({ search }) => {
-    const recipies = await recipeList(process.env.COOKBOOK_ROOT || "", search);
+    const recipes = await recipeList(process.env.COOKBOOK_ROOT || "", search);
 
     return {
-      content: recipies.map((recipe) => ({
+      content: recipes.map((recipe) => ({
         type: "text",
         text: `${recipe.short}: ${recipe.name} - ${recipe.description}`,
       })),
@@ -51,9 +62,10 @@ server.tool(
   }
 );
 
+// Read a cookbook recipe so that it can be followed after reading the recipe use it to complete the task.
 server.tool(
   "read_cookbook",
-  "Read a cookbook recipe so that it can be followed after reading the recipe use it to complete the task.",
+  "Read a cookbook recipe so that it can be followed after reading the recipe; use it to complete the task.",
   {
     name: z
       .string()
