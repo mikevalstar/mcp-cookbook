@@ -1,0 +1,4 @@
+{
+  "watch": ["src/**/*.ts", "src/index.ts"],
+  "exec": "tsc && chmod 755 build/index.js"
+}
