@@ -2,9 +2,9 @@ import fg from "fast-glob";
 import path from "path";
 import fs from "fs/promises";
 import matter from "gray-matter";
+import Fuse from "fuse.js";
 
-export async function recipeList(folder: string) {
-  // TODO: Fuse for search
+export async function recipeList(folder: string, search?: string) {
   const files = await fg(path.join(folder, "**/.cookbook/**/*.md"));
 
   // loop over files and read the file's frontmatter into memory
@@ -27,6 +27,15 @@ export async function recipeList(folder: string) {
       short: recipe.fm.data.short || "",
     };
   });
+
+  if (search) {
+    const fuse = new Fuse(returnData, {
+      keys: ["name", "short", "description", "filename"],
+      distance: 1000,
+      threshold: 0.5,
+    });
+    return fuse.search(search).map((result) => result.item);
+  }
 
   return returnData;
 }

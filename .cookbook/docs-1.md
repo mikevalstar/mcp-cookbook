@@ -1,5 +1,7 @@
 ---
-name: Document Functions
+name: New Library Functions
+short: docs1
+description: The procedure for adding a new library functions as well as how they should be documented
 ---
 
 ## New Function Creation
@@ -8,11 +10,11 @@ When creating a new function in the src/libs folder you will need to do the foll
 
 ### 1. Create file & function
 
-Create a new file in the src/lib folder, this shoudl have the same name as the function you will be creating.
+Create a new file in the src/lib folder, this should have the same name as the function you will be creating.
 
 Inside this file cerate your function.
 
-Youy can look at `src/lib/recipieRead.ts` as a good example of this
+You can look at `src/lib/recipieRead.ts` as a good example of this
 
 ### 2. Write JSDocs
 
@@ -30,4 +32,4 @@ as well as a description of what the function does
 
 ## Additoinal Notes
 
-- each file should only have 1 funciton in it for berevity
+- each file should only have 1 function in it for brevity

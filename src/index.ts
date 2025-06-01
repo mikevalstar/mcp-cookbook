@@ -13,8 +13,16 @@ const server = new McpServer(
       "A MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks",
   },
   {
-    instructions:
-      "This server provides a list of reusable tasks and procedures (cookbook recipes) for use in determining next steps on a task and prosrciptive instructions",
+    instructions: `This server provides a list of reusable tasks and procedures also known as cookbooks or recipes for use in determining next steps on a task and prescriptive instructions.
+
+      The recipe, cookbook, or procedure is a list of steps to complete a task.
+      The recipe, cookbook, or procedure is written in markdown format.
+      The recipe, cookbook, or procedure is written in a way that is easy to understand and follow.
+
+      When you know the name of the recipe, cookbook, or procedure you want to use, you can use the read_cookbook tool to read the recipe, cookbook, or procedure.
+
+      You shoudl follow these cookbooks when there is one available, it will help you complete the task.
+      `,
   }
 );
 
@@ -30,7 +38,7 @@ server.tool(
       ),
   },
   async ({ search }) => {
-    const recipies = await recipeList(process.env.COOKBOOK_ROOT || "");
+    const recipies = await recipeList(process.env.COOKBOOK_ROOT || "", search);
 
     return {
       content: recipies.map((recipe) => ({
@@ -43,7 +51,7 @@ server.tool(
 
 server.tool(
   "read_cookbook",
-  "Read a cookbook recipe. Use the instructions in the recipe to complete the task.",
+  "Read a cookbook recipe so that it can be followed after reading the recipe use it to complete the task.",
   {
     name: z
       .string()

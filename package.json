@@ -28,6 +28,7 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
     "fast-glob": "^3.3.3",
+    "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
     "zod": "^3.25.46"
   },
