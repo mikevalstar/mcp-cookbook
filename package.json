@@ -1,7 +1,7 @@
 {
-  "name": "mcp-cookbook",
+  "name": "@mikevalstar/mcp-cookbook",
   "version": "0.1.0",
-  "description": "MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks ",
+  "description": "MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks",
   "bin": {
     "mcp-cookbook": "build/index.js"
   },
@@ -12,7 +12,8 @@
     "start": "ts-node src/index.ts",
     "build": "tsc && chmod 755 build/index.js",
     "debug": "npx @modelcontextprotocol/inspector node build/index.js",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "prepare": "npm run build"
   },
   "keywords": [
     "MCP",
@@ -22,7 +23,7 @@
     "recipies"
   ],
   "type": "module",
-  "author": "Mike Valstar",
+  "author": "Mike Valstar <mike@valstar.dev>",
   "license": "MIT",
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
