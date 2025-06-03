@@ -12,7 +12,7 @@ const server = new McpServer(
     name: "Cookbook",
     version: "0.1.0",
     description:
-      "A MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks",
+      "A MCP server providing AI coding assistants with reusable recipes and procedures for common tasks and projects",
   },
   {
     instructions: `This provides a list of reusable tasks and procedures also known as cookbooks or recipes for use in determining next steps on a task and prescriptive instructions.
@@ -76,7 +76,7 @@ server.tool(
   async ({ name }) => {
     const recipe = await recipeRead(process.env.COOKBOOK_ROOT || "", name);
     return {
-      content: [{ type: "text", text: recipe.content }],
+      content: [{ type: "text", text: recipe?.content ?? "Not found" }],
     };
   }
 );

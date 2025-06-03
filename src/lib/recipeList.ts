@@ -3,6 +3,7 @@ import path from "path";
 import fs from "fs/promises";
 import matter from "gray-matter";
 import Fuse from "fuse.js";
+import chalk from "chalk";
 
 /**
  * Interface representing a recipe item returned by recipeList
@@ -42,29 +43,48 @@ export async function recipeList(
   search?: string
 ): Promise<Recipe[]> {
   // Find all markdown files in .cookbook directories
-  const files = await fg(path.join(folder, "**/.cookbook/**/*.md"));
+  let files: string[] = [];
+  try {
+    files = await fg(path.join(folder, "**/.cookbook/**/*.md"));
+  } catch (error) {
+    console.error(
+      chalk.red(`Error scanning for recipe files in ${folder}:`),
+      error
+    );
+    return [];
+  }
 
   // loop over files and read the file's frontmatter into memory
   const recipes = files.map(async (file) => {
-    const content = await fs.readFile(file, "utf8");
-    const frontmatter = matter(content);
-    return {
-      fm: frontmatter,
-      fileName: file,
-    };
+    try {
+      const content = await fs.readFile(file, "utf8");
+      const frontmatter = matter(content);
+      return {
+        fm: frontmatter,
+        fileName: file,
+      };
+    } catch (error) {
+      console.error(
+        chalk.yellow(`Warning: Could not read recipe file ${file}:`),
+        error
+      );
+      return null; // Return null for failed reads
+    }
   });
 
   const recipesAwaited = await Promise.all(recipes);
 
-  // Transform raw data into recipe objects
-  const returnData = recipesAwaited.map((recipe) => {
-    return {
-      filename: recipe.fileName,
-      name: recipe.fm.data.name || "",
-      description: recipe.fm.data.description || "",
-      short: recipe.fm.data.short || "",
-    };
-  });
+  // Filter out null values (failed reads) and transform into recipe objects
+  const returnData = recipesAwaited
+    .filter((recipe): recipe is NonNullable<typeof recipe> => recipe !== null)
+    .map((recipe) => {
+      return {
+        filename: recipe.fileName,
+        name: recipe.fm.data.name || "",
+        description: recipe.fm.data.description || "",
+        short: recipe.fm.data.short || "",
+      };
+    });
 
   // Apply fuzzy search if search term provided
   if (search) {

@@ -1,6 +1,6 @@
 {
   "name": "@mikevalstar/mcp-cookbook",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "description": "MCP server providing AI coding assistants with reusable recipes and procedures for common development tasks",
   "bin": {
     "mcp-cookbook": "build/index.js"
@@ -27,6 +27,7 @@
   "packageManager": "pnpm@10.8.0",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.1",
+    "chalk": "^5.4.1",
     "fast-glob": "^3.3.3",
     "fuse.js": "^7.1.0",
     "gray-matter": "^4.0.3",
